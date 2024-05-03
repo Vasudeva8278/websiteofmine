@@ -3,70 +3,40 @@ import emailjs from "emailjs-com";
 import "./style.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { meta } from "../../content_option";
-import { Container, Row, Col, Alert } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { contactConfig } from "../../content_option";
 
-
-
-
 export const ContactUs = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    name: "",
-    message: "",
-    loading: false,
-    show: false,
-    alertMessage: "",
-    variant: "",
-  });
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = async (e) => {
+  const sendEmail = (e) => {
     e.preventDefault();
-    setFormData({ ...formData, loading: true });
+    setLoading(true);
 
-    try {
-      const templateParams = {
-        from_name: formData.name,
-        user_email: formData.email,
-        to_name: "vasudevsanchapu@gmail.com", // Replace with your email
-        message: formData.message,
-      };
-
-      await emailjs.send(
-        contactConfig.service_m9nd8qd,
-        contactConfig.template_qs7jvgn,
-        templateParams,
-        { user_id: "9BS_ngh0mnoGdfqKM" }
-      );
-
-      setFormData({
-        ...formData,
-        loading: false,
-        alertMessage: "SUCCESS! Thank you for your message",
-        variant: "success",
-        show: true,
+    emailjs.sendForm('service_m9nd8qd', 'template_qs7jvgn', e.target, '9ZoS0emdIOVmjNYXs')
+      .then((result) => {
+        console.log(result.text);
+        setSuccessMessage('Email sent successfully!');
+        setErrorMessage('');
+      })
+      .catch((error) => {
+        console.error(error.text);
+        setErrorMessage('Failed to send email.');
+        setSuccessMessage('');
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    } catch (error) {
-      console.error("Error sending email:", error);
-      setFormData({
-        ...formData,
-        alertMessage: `Failed to send! ${error.message}`,
-        variant: "danger",
-        show: true,
-      });
-      document.getElementsByClassName("co_alert")[0].scrollIntoView();
-    }
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
   };
 
   return (
     <HelmetProvider>
+      <h1>Vasudeva rao</h1>
       <Container>
         <Helmet>
           <meta charSet="utf-8" />
@@ -80,18 +50,7 @@ export const ContactUs = () => {
           </Col>
         </Row>
         <Row className="sec_sp">
-          <Col lg="12">
-            <Alert
-              variant={formData.variant}
-              className={`rounded-0 co_alert ${
-                formData.show ? "d-block" : "d-none"
-              }`}
-              onClose={() => setFormData({ ...formData, show: false })}
-              dismissible
-            >
-              <p className="my-0">{formData.alertMessage}</p>
-            </Alert>
-          </Col>
+          <Col lg="12"></Col>
           <Col lg="5" className="mb-5">
             <h3 className="color_sec py-4">Get in touch</h3>
             <address>
@@ -108,56 +67,66 @@ export const ContactUs = () => {
             <p>{contactConfig.description}</p>
           </Col>
           <Col lg="7" className="d-flex align-items-center">
-            <form onSubmit={handleSubmit} className="contact__form w-100">
+            <form onSubmit={sendEmail} className="contact__form w-100">
               <Row>
                 <Col lg="6" className="form-group">
-                  <input
-                    className="form-control"
-                    id="name"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    type="text"
-                    required
-                    onChange={handleChange}
-                  />
+                  <label>
+                    Email:
+                    <input
+                      className="form-control"
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </label>
                 </Col>
                 <Col lg="6" className="form-group">
-                  <input
-                    className="form-control rounded-0"
-                    id="email"
-                    name="email"
-                    placeholder="Email"
-                    type="email"
-                    value={formData.email}
-                    required
-                    onChange={handleChange}
-                  />
+                  <label>
+                    Name:
+                    <input
+                      className="form-control rounded-0"
+                      id="email"
+                      type="text"
+                      name="subject"
+                      placeholder="Name"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                      required
+                    />
+                  </label>
                 </Col>
               </Row>
-              <textarea
-                className="form-control rounded-0"
-                id="message"
-                name="message"
-                placeholder="Message"
-                rows="5"
-                value={formData.message}
-                onChange={handleChange}
-                required
-              ></textarea>
+              <label>
+                Message:
+                <textarea
+                  className="form-control rounded-0"
+                  id="message"
+                  name="message"
+                  placeholder="Message"
+                  rows="5"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  required
+                />
+              </label>
               <br />
               <Row>
                 <Col lg="12" className="form-group">
-                  <button className="btn ac_btn" type="submit">
-                    {formData.loading ? "Sending..." : "Send"}
+                  <button className="btn ac_btn" type="submit" disabled={loading}>
+                    {loading ? "Sending..." : "Send"}
                   </button>
                 </Col>
               </Row>
+              {successMessage && <Alert variant="success">{successMessage}</Alert>}
+              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
             </form>
           </Col>
         </Row>
       </Container>
-      <div className={formData.loading ? "loading-bar" : "d-none"}></div>
+      <div></div>
     </HelmetProvider>
   );
 };

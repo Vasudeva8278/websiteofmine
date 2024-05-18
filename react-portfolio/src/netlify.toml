@@ -1,0 +1,10 @@
+[[redirects]]
+  from = "/about-us"
+  to = "/about"
+  
+
+[[redirects]]
+from = "/news/2020/*"
+to = "/blog/:splat"
+
+

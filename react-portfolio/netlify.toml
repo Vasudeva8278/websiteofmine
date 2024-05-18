@@ -1,10 +1,8 @@
-[[redirects]]
-  from = "/about-us"
-  to = "/about"
-  
+[build]
+  publish = "public"
+  command = "npm run build"
 
 [[redirects]]
-from = "/news/2020/*"
-to = "/blog/:splat"
-
-
+  from = "/*"
+  to = "/index.html"
+  status = 200

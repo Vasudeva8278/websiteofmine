@@ -34,7 +34,7 @@ section {
     height: calc(100vh - 60px);
     min-height: 700px;
     height: 100vh;
-    margin-top: -60px;
+   
 }
 
 @media (max-width:991.98px) {
@@ -107,16 +107,18 @@ section {
     transition: all 0.6s cubic-bezier(0.55, 0, 0.1, 1);
     cursor: pointer;
     border-radius: 0;
+
     margin-right: 20px;
+
 }
 
 .ac_btn a {
     text-decoration: none;
 }
-
 .ac_btn:hover {
     box-shadow: 8px 8px 0px var(--text-color), -8px -8px 0px var(--text-color);
 }
+
 
 .ac_btn:hover .one {
     opacity: 1;
